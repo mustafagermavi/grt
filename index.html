@@ -3,87 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kurdex VIP Crash</title>
+    <title>Mustafa Dev - 1xbet Aviator Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0e11; --panel: #1e2329; --accent: #00ff88;
-            --danger: #ff3e3e; --gold: #f3ba2f; --blue: #3498db;
+            --main-bg: #101112; --panel-bg: #1c1d20; --accent: #28a745;
+            --gold: #f2d06b; --danger: #eb445a; --blue: #3498db; --glass: rgba(255, 255, 255, 0.05);
         }
 
         body { 
-            background: var(--bg); color: white; font-family: 'Press Start 2P', cursive; 
-            margin: 0; display: flex; flex-direction: column; align-items: center;
-            user-select: none; touch-action: manipulation;
+            background: var(--main-bg); color: white; font-family: 'Press Start 2P', cursive; 
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            image-rendering: pixelated;
         }
 
-        /* Header & History */
-        .header { width: 100%; padding: 15px; display: flex; justify-content: space-between; font-size: 10px; box-sizing: border-box; background: #161a1e; }
-        .history-bar { 
-            width: 100%; height: 40px; background: #000; display: flex; 
-            align-items: center; gap: 10px; padding: 0 15px; overflow-x: auto; border-bottom: 2px solid #333;
+        /* 1. Header & Stats */
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; background: #161719; border-bottom: 2px solid #222; font-size: 8px;
         }
-        .h-item { padding: 4px 8px; border-radius: 4px; font-size: 8px; font-weight: bold; }
-        .low { background: var(--blue); } .mid { background: #9b59b6; } .high { background: var(--gold); color: #000; }
+        .balance-box { color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 4px; }
 
-        /* Game Stage */
-        .stage {
-            width: 95%; max-width: 500px; height: 260px; background: radial-gradient(circle, #1a1f2c, #0b0e11);
-            margin: 15px 0; border: 4px solid #333; position: relative; overflow: hidden;
+        /* 2. Real History Bar */
+        .history {
+            display: flex; gap: 8px; padding: 10px; background: #000; overflow-x: auto;
+            border-bottom: 1px solid #333; height: 35px; align-items: center;
         }
-        #multiplier {
-            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 2.5rem; color: var(--accent); text-shadow: 4px 4px #000; z-index: 10;
+        .h-tag { padding: 4px 8px; border-radius: 10px; font-size: 7px; min-width: 40px; text-align: center; }
+        .h-low { background: #3498db; } .h-mid { background: #9b59b6; } .h-high { background: var(--gold); color: #000; }
+
+        /* 3. The Main Stage (Graph Area) */
+        .game-stage {
+            flex-grow: 1; position: relative; background: radial-gradient(circle at bottom left, #1a1f2c, #101112);
+            overflow: hidden; border-bottom: 2px solid #222;
         }
+        .grid-line { position: absolute; width: 200%; height: 200%; background-image: linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px); background-size: 50px 50px; opacity: 0.5; animation: gridScroll 10s linear infinite; }
+        @keyframes gridScroll { from { transform: translate(0, 0); } to { transform: translate(-50px, 50px); } }
+
         #plane {
-            position: absolute; bottom: 20px; left: 20px; width: 45px; height: 30px;
-            background: var(--danger); box-shadow: 6px 6px 0 #900; display: none; z-index: 11;
+            position: absolute; bottom: 20px; left: 20px; width: 50px; height: 35px;
+            background: var(--danger); box-shadow: 6px 6px 0 #800; display: none; z-index: 10;
         }
 
-        /* Double Betting Area */
-        .bet-container { width: 95%; max-width: 500px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .bet-box { background: var(--panel); padding: 15px; border-radius: 8px; border-bottom: 4px solid #111; text-align: center; }
-        input { 
-            width: 80%; background: #000; border: 2px solid #444; color: var(--accent); 
-            padding: 8px; font-family: 'Press Start 2P'; font-size: 10px; margin-bottom: 10px;
+        #mult-display {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 2.8rem; font-weight: bold; text-shadow: 0 0 20px rgba(255,255,255,0.2); z-index: 5;
         }
-        .bet-btn { 
-            width: 100%; padding: 15px 0; font-family: 'Press Start 2P'; font-size: 11px; 
-            border: none; cursor: pointer; color: white; border-bottom: 5px solid rgba(0,0,0,0.3);
-        }
-        .btn-ready { background: #2ebd85; }
-        .btn-cash { background: var(--gold); color: #000; }
-        .btn-wait { background: #555; pointer-events: none; }
 
-        /* Animation */
-        .grid { position: absolute; width: 200%; height: 100%; background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px; opacity: 0.2; animation: moveGrid 3s linear infinite; }
-        @keyframes moveGrid { from { transform: translate(0, 0); } to { transform: translate(-40px, 40px); } }
+        /* 4. Double Betting Panels */
+        .bet-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; background: #161719; }
+        .bet-card { background: var(--panel-bg); padding: 12px; border-radius: 12px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
+        
+        .input-row { display: flex; gap: 5px; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: var(--gold); padding: 10px; font-family: 'Press Start 2P'; font-size: 10px; border-radius: 5px; }
+        
+        .quick-bet { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .q-btn { background: #2a2b2e; border: none; color: #ccc; font-size: 6px; padding: 8px; cursor: pointer; border-radius: 4px; }
+
+        .main-btn { 
+            width: 100%; padding: 18px 0; font-family: 'Press Start 2P'; font-size: 10px; 
+            border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.2s;
+            border-bottom: 4px solid rgba(0,0,0,0.3);
+        }
+        .btn-bet { background: #28a745; } .btn-cash { background: var(--gold); color: #000; } .btn-wait { background: #444; opacity: 0.7; }
+
+        /* Mobile Optimization */
+        @media (max-width: 480px) {
+            #mult-display { font-size: 2rem; }
+            .bet-area { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <span style="color:var(--accent)">ID: 88291</span>
-        <span id="bal-val" style="color:var(--gold)">1000.00 IQD</span>
-    </div>
+    <header>
+        <div style="color:#888">MUSTAFA <span style="color:var(--accent)">DEV</span></div>
+        <div class="balance-box" id="balance">1000.00 IQD</div>
+    </header>
 
-    <div class="history-bar" id="history">
-        </div>
+    <div class="history" id="history-list"></div>
 
-    <div class="stage">
-        <div class="grid"></div>
+    <div class="game-stage">
+        <div class="grid-line"></div>
         <div id="plane"></div>
-        <div id="multiplier">1.00x</div>
+        <div id="mult-display">1.00x</div>
     </div>
 
-    <div class="bet-container">
-        <div class="bet-box">
-            <input type="number" id="amt1" value="100">
-            <button id="btn1" class="bet-btn btn-ready" onclick="placeBet(1)">BET</button>
+    <div class="bet-area">
+        <div class="bet-card">
+            <div class="input-row"><input type="number" id="amt1" value="100"></div>
+            <div class="quick-bet">
+                <button class="q-btn" onclick="setAmt(1, 100)">100</button>
+                <button class="q-btn" onclick="setAmt(1, 500)">500</button>
+            </div>
+            <button id="btn1" class="main-btn btn-bet" onclick="handleAction(1)">BET</button>
         </div>
-        <div class="bet-box">
-            <input type="number" id="amt2" value="100">
-            <button id="btn2" class="bet-btn btn-ready" onclick="placeBet(2)">BET</button>
+        <div class="bet-card">
+            <div class="input-row"><input type="number" id="amt2" value="100"></div>
+            <div class="quick-bet">
+                <button class="q-btn" onclick="setAmt(2, 200)">200</button>
+                <button class="q-btn" onclick="setAmt(2, 1000)">1000</button>
+            </div>
+            <button id="btn2" class="main-btn btn-bet" onclick="handleAction(2)">BET</button>
         </div>
     </div>
 
@@ -91,108 +112,101 @@
         let balance = 1000.00;
         let mult = 1.00;
         let isFlying = false;
-        let crashPoint = 0;
+        let crashAt = 0;
         let bets = {
             1: { active: false, amount: 0, cashed: false },
             2: { active: false, amount: 0, cashed: false }
         };
 
-        function placeBet(id) {
-            const amtInput = document.getElementById('amt' + id);
+        function setAmt(id, val) { document.getElementById('amt'+id).value = val; }
+
+        function handleAction(id) {
             const btn = document.getElementById('btn' + id);
-            let amount = parseFloat(amtInput.value);
+            const amt = parseFloat(document.getElementById('amt' + id).value);
 
             if (!isFlying && !bets[id].active) {
-                if (amount > balance) return;
-                balance -= amount;
-                bets[id].active = true;
-                bets[id].amount = amount;
-                bets[id].cashed = false;
-                btn.innerText = "WAITING";
-                btn.className = "bet-btn btn-wait";
+                if (amt > balance) return;
+                balance -= amt;
+                bets[id] = { active: true, amount: amt, cashed: false };
+                btn.innerText = "WAITING...";
+                btn.className = "main-btn btn-wait";
                 updateUI();
             } else if (isFlying && bets[id].active && !bets[id].cashed) {
-                // Cash Out
-                let win = parseFloat((bets[id].amount * mult).toFixed(2));
-                balance += win;
+                let win = (bets[id].amount * mult).toFixed(2);
+                balance += parseFloat(win);
                 bets[id].cashed = true;
-                btn.innerText = win.toFixed(0);
-                btn.className = "bet-btn btn-wait";
+                btn.innerText = "WON: " + win;
+                btn.className = "main-btn btn-wait";
                 updateUI();
             }
         }
 
         function gameLoop() {
             isFlying = false;
-            document.getElementById('multiplier').style.color = "var(--accent)";
-            document.getElementById('multiplier').innerText = "WAITING...";
-            
-            setTimeout(() => {
-                startFlight();
-            }, 4000);
+            document.getElementById('mult-display').innerText = "WAITING...";
+            document.getElementById('mult-display').style.color = "white";
+            document.getElementById('plane').style.display = "none";
+
+            setTimeout(startFlight, 5000);
         }
 
         function startFlight() {
             isFlying = true;
             mult = 1.00;
-            crashPoint = (Math.random() * 8 + 1.05).toFixed(2);
+            crashAt = (Math.random() * 7 + 1.05).toFixed(2);
             document.getElementById('plane').style.display = "block";
             
-            // Update buttons that were waiting
             for(let i=1; i<=2; i++) {
                 if(bets[i].active) {
-                    document.getElementById('btn' + i).innerText = "CASH OUT";
-                    document.getElementById('btn' + i).className = "bet-btn btn-cash";
+                    document.getElementById('btn'+i).innerText = "CASH OUT";
+                    document.getElementById('btn'+i).className = "main-btn btn-cash";
                 }
             }
-            updateFlight();
+            tick();
         }
 
-        function updateFlight() {
+        function tick() {
             if (!isFlying) return;
-            mult += 0.008 * Math.pow(mult, 1.1);
-            document.getElementById('multiplier').innerText = mult.toFixed(2) + "x";
+            mult += 0.007 * Math.pow(mult, 1.15);
+            document.getElementById('mult-display').innerText = mult.toFixed(2) + "x";
+            document.getElementById('mult-display').style.color = "var(--accent)";
 
-            let pos = (mult - 1) * 30;
-            document.getElementById('plane').style.bottom = (20 + pos) + "px";
-            document.getElementById('plane').style.left = (20 + pos * 1.4) + "px";
+            // Real Plane Curve
+            let x = (mult - 1) * 45;
+            let y = (mult - 1) * 25;
+            document.getElementById('plane').style.left = (20 + x) + "px";
+            document.getElementById('plane').style.bottom = (20 + y) + "px";
 
-            if (mult >= crashPoint) {
-                crash();
-            } else {
-                requestAnimationFrame(updateFlight);
-            }
+            if (mult >= crashAt) { crash(); } 
+            else { requestAnimationFrame(tick); }
         }
 
         function crash() {
             isFlying = false;
-            document.getElementById('multiplier').innerText = "FLEW AWAY!";
-            document.getElementById('multiplier').style.color = "var(--danger)";
+            document.getElementById('mult-display').innerText = "FLEW AWAY!";
+            document.getElementById('mult-display').style.color = "var(--danger)";
             document.getElementById('plane').style.display = "none";
             
-            addHistory(mult);
+            updateHistory(mult);
 
-            // Reset buttons
             for(let i=1; i<=2; i++) {
                 bets[i].active = false;
-                document.getElementById('btn' + i).innerText = "BET";
-                document.getElementById('btn' + i).className = "bet-btn btn-ready";
+                document.getElementById('btn'+i).innerText = "BET";
+                document.getElementById('btn'+i).className = "main-btn btn-bet";
             }
             setTimeout(gameLoop, 3000);
         }
 
-        function addHistory(val) {
-            const h = document.getElementById('history');
+        function updateHistory(val) {
+            const list = document.getElementById('history-list');
             const item = document.createElement('div');
-            let type = val < 2 ? 'low' : (val < 10 ? 'mid' : 'high');
-            item.className = `h-item ${type}`;
+            let color = val < 2 ? 'h-low' : (val < 10 ? 'h-mid' : 'h-high');
+            item.className = `h-tag ${color}`;
             item.innerText = parseFloat(val).toFixed(2) + "x";
-            h.prepend(item);
+            list.prepend(item);
         }
 
-        function updateUI() {
-            document.getElementById('bal-val').innerText = balance.toFixed(2) + " IQD";
-        }
+        function updateUI() { document.getElementById('balance').innerText = balance.toFixed(2) + " IQD"; }
 
         gameLoop();
     </script>
