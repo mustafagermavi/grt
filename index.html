@@ -3,187 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kurdex Aviator Engine</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Aviator Official Clone</title>
     <style>
-        :root { --main-red: #cb011a; --dark-bg: #121214; --panel-bg: #1b1c20; --gold: #f2d06b; }
-        body { background: var(--dark-bg); color: white; font-family: 'Roboto', sans-serif; margin: 0; overflow: hidden; }
-        
-        /* سەرەوەی یارییەکە */
-        .top-nav { display: flex; justify-content: space-between; padding: 10px 15px; background: #1b1c20; border-bottom: 2px solid #282a2f; align-items: center; }
-        .balance { color: #28a745; font-weight: bold; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 20px; font-size: 14px; }
+        :root {
+            --bg-dark: #121214;
+            --panel-bg: #1b1c20;
+            --aviator-red: #d1021c;
+            --win-green: #28a745;
+            --cashout-gold: #ffaa00;
+        }
 
-        /* مێژووی فڕینەکان (ڕێک وەک ئەسڵەکە) */
-        .history-list { display: flex; gap: 6px; padding: 8px 15px; background: #121214; overflow-x: auto; height: 30px; }
-        .h-node { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; min-width: 40px; text-align: center; }
-        .blue { background: #3498db; } .purple { background: #9b59b6; } .gold { background: #c2951d; }
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Inter', sans-serif, Arial;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        /* گۆڕەپانی فڕین (Real Curve Engine) */
-        .canvas-container { position: relative; width: 100%; height: 280px; background: #161618; margin-bottom: 5px; overflow: hidden; border-bottom: 1px solid #222; }
-        #multiplier { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 3.5rem; font-weight: 900; z-index: 10; transition: scale 0.1s; }
-        canvas { width: 100%; height: 100%; }
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #1b1c20;
+            border-bottom: 2px solid #25252a;
+        }
 
-        /* بەشی گرەوکردن (Double Panel 1xbet Style) */
-        .betting-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .bet-card { background: var(--panel-bg); border-radius: 15px; padding: 12px; border: 1px solid #282a2f; position: relative; }
-        .input-box { display: flex; align-items: center; background: #000; border-radius: 20px; padding: 5px 10px; margin-bottom: 10px; border: 1px solid #333; }
-        .input-box input { background: transparent; border: none; color: white; width: 100%; text-align: center; font-size: 16px; font-weight: bold; outline: none; }
-        
-        .main-btn { width: 100%; height: 55px; border-radius: 12px; border: none; font-weight: 900; font-size: 18px; cursor: pointer; text-transform: uppercase; transition: 0.1s; }
-        .bet-btn { background: #28a745; color: white; box-shadow: 0 4px 0 #1e7e34; }
-        .cashout-btn { background: #d9a507; color: black; box-shadow: 0 4px 0 #a67c00; }
-        .bet-btn:active, .cashout-btn:active { transform: translateY(3px); box-shadow: none; }
-        .waiting { background: #444 !important; box-shadow: none !important; color: #888; cursor: not-allowed; }
+        .balance {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 15px;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
 
-        /* ئەنیمەیشنی فڕۆکە */
-        #plane-img { position: absolute; width: 60px; z-index: 5; filter: drop-shadow(0 0 10px var(--main-red)); display: none; }
+        /* History */
+        .history {
+            display: flex;
+            gap: 6px;
+            padding: 8px 15px;
+            background: #121214;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .h-node {
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .blue { background: #3498db; }
+        .purple { background: #9b59b6; }
+        .gold { background: #c2951d; }
+
+        /* Main Game Area */
+        .game-view {
+            flex-grow: 1;
+            position: relative;
+            background: #161618;
+            margin: 10px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #282a2f;
+        }
+
+        #multiplier {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            font-weight: 900;
+            z-index: 10;
+        }
+
+        #plane {
+            position: absolute;
+            width: 80px;
+            z-index: 5;
+            display: none;
+            transition: transform 0.1s;
+        }
+
+        /* Betting Panels */
+        .betting-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            background: #121214;
+        }
+
+        .bet-card {
+            background: #1b1c20;
+            border-radius: 15px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #282a2f;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border-radius: 20px;
+            padding: 5px 15px;
+            margin-bottom: 8px;
+            width: 80%;
+        }
+
+        .input-row input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .action-btn {
+            width: 100%;
+            height: 55px;
+            border-radius: 12px;
+            border: none;
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .btn-bet { background: #28a745; color: white; border-bottom: 4px solid #1e7e34; }
+        .btn-cashout { background: #d9a507; color: black; border-bottom: 4px solid #a67c00; }
+        .btn-waiting { background: #444; color: #888; border: none; cursor: default; }
+
+        /* Animation Grid */
+        .grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 500px) {
+            .betting-area { grid-template-columns: 1fr; }
+            #multiplier { font-size: 3rem; }
+        }
     </style>
 </head>
 <body>
 
 <div class="top-nav">
-    <div style="color:#aaa; font-size:12px;">AVIATOR <span style="color:var(--main-red)">PRO</span></div>
-    <div class="balance" id="wallet">1,000.00 IQD</div>
+    <div style="font-weight: 900; color: #fff;">AVIATOR</div>
+    <div class="balance" id="balance">1,000.00 IQD</div>
 </div>
 
-<div class="history-list" id="history"></div>
+<div class="history" id="history-box"></div>
 
-<div class="canvas-container">
-    <canvas id="gameCanvas"></canvas>
+<div class="game-view">
+    <div class="grid"></div>
     <div id="multiplier">1.00x</div>
-    <svg id="plane-img" viewBox="0 0 24 24" fill="red"><path d="M21,16L21,14L13,9L13,3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
+    <img id="plane" src="https://aviator-next.spribegaming.com/assets/plane.png" alt="plane">
 </div>
 
-<div class="betting-section">
+<div class="betting-area">
     <div class="bet-card">
-        <div class="input-box"><input type="number" id="amt1" value="100"></div>
-        <button id="btn1" class="main-btn bet-btn" onclick="handleBet(1)">BET</button>
+        <div class="input-row"><input type="number" id="amt1" value="100.00"></div>
+        <button id="btn1" class="action-btn btn-bet" onclick="handleBet(1)">BET</button>
     </div>
     <div class="bet-card">
-        <div class="input-box"><input type="number" id="amt2" value="100"></div>
-        <button id="btn2" class="main-btn bet-btn" onclick="handleBet(2)">BET</button>
+        <div class="input-row"><input type="number" id="amt2" value="100.00"></div>
+        <button id="btn2" class="action-btn btn-bet" onclick="handleBet(2)">BET</button>
     </div>
 </div>
 
 <script>
-    let balance = 1000.0;
-    let multiplier = 1.0;
-    let isFlying = false;
+    let wallet = 1000.0;
+    let mult = 1.0;
+    let flying = false;
     let crashPoint = 0;
-    let gameBets = { 1: { active: false, amt: 0, cashed: false }, 2: { active: false, amt: 0, cashed: false } };
+    let activeBets = { 1: { on: false, amt: 0, cashed: false }, 2: { on: false, amt: 0, cashed: false } };
 
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const multText = document.getElementById('multiplier');
-    const plane = document.getElementById('plane-img');
+    const multEl = document.getElementById('multiplier');
+    const planeEl = document.getElementById('plane');
 
-    // لۆژیکی یاری وەک ئەسڵەکە (RNG)
-    function generateCrashPoint() {
-        let r = Math.random();
-        if (r < 0.05) return 1.00; // 5% یارییەکە ڕاستەوخۆ دەتەقێت
-        return (0.99 / (1 - Math.random())).toFixed(2);
-    }
-
-    function initRound() {
-        multiplier = 1.0;
-        isFlying = false;
-        multText.innerText = "WAITING...";
-        multText.style.color = "white";
-        plane.style.display = "none";
-        
-        // چاوەڕوانی بۆ دەستپێکردن (ڕێک وەک ئەسڵەکە 5 چرکە)
-        setTimeout(startRound, 5000);
+    function resetRound() {
+        mult = 1.0;
+        flying = false;
+        multEl.innerText = "WAIT NEXT ROUND";
+        multEl.style.color = "#aaa";
+        planeEl.style.display = "none";
+        setTimeout(startRound, 5000); // 5 Seconds waiting like original
     }
 
     function startRound() {
-        isFlying = true;
-        crashPoint = generateCrashPoint();
-        plane.style.display = "block";
+        flying = true;
+        crashPoint = (Math.random() * 5 + 1.01).toFixed(2);
+        planeEl.style.display = "block";
+        multEl.style.color = "white";
         
         for(let i=1; i<=2; i++) {
-            if(gameBets[i].active) {
-                document.getElementById('btn'+i).innerText = "CASH OUT";
-                document.getElementById('btn'+i).className = "main-btn cashout-btn";
+            if(activeBets[i].on) {
+                const btn = document.getElementById('btn'+i);
+                btn.innerText = "CASH OUT";
+                btn.className = "action-btn btn-cashout";
             }
         }
-        requestAnimationFrame(updateFrame);
+        update();
     }
 
-    function updateFrame() {
-        if (!isFlying) return;
+    function update() {
+        if(!flying) return;
+        mult += 0.001 * Math.pow(mult, 1.4);
+        multEl.innerText = mult.toFixed(2) + "x";
 
-        // ماتماتیکی فڕین (Parabolic Growth)
-        multiplier += 0.001 * Math.pow(multiplier, 1.4);
-        multText.innerText = multiplier.toFixed(2) + "x";
-        
-        // جوڵەی فڕۆکە و کێشانی هێڵەکە
-        let x = (multiplier - 1) * 60;
-        let y = canvas.height - (Math.pow(multiplier - 1, 1.3) * 40) - 50;
-        
-        plane.style.left = x + "px";
-        plane.style.top = y + "px";
+        // Real Curve Movement
+        let x = (mult - 1) * 70;
+        let y = 200 - (Math.pow(mult - 1, 1.2) * 50);
+        planeEl.style.left = Math.min(x, 250) + "px";
+        planeEl.style.bottom = Math.min(y, 180) + "px";
 
-        if (multiplier >= crashPoint) {
+        if(mult >= crashPoint) {
             doCrash();
         } else {
-            requestAnimationFrame(updateFrame);
+            requestAnimationFrame(update);
         }
     }
 
     function doCrash() {
-        isFlying = false;
-        multText.innerText = "FLEW AWAY!";
-        multText.style.color = "#ff3e3e";
-        plane.style.display = "none";
+        flying = false;
+        multEl.innerText = "FLEW AWAY!";
+        multEl.style.color = "var(--aviator-red)";
+        planeEl.style.display = "none";
         
-        addToHistory(multiplier);
-        resetBets();
-        setTimeout(initRound, 3000);
+        addHistory(mult);
+        
+        for(let i=1; i<=2; i++) {
+            activeBets[i].on = false;
+            const btn = document.getElementById('btn'+i);
+            btn.innerText = "BET";
+            btn.className = "action-btn btn-bet";
+        }
+        setTimeout(resetRound, 3000);
     }
 
     function handleBet(id) {
-        const btn = document.getElementById('btn' + id);
-        const amt = parseFloat(document.getElementById('amt' + id).value);
+        const btn = document.getElementById('btn'+id);
+        const val = parseFloat(document.getElementById('amt'+id).value);
 
-        if (!isFlying && !gameBets[id].active) {
-            if (amt > balance) return;
-            balance -= amt;
-            gameBets[id] = { active: true, amt: amt, cashed: false };
+        if(!flying && !activeBets[id].on) {
+            if(val > wallet) return;
+            wallet -= val;
+            activeBets[id] = { on: true, amt: val, cashed: false };
             btn.innerText = "WAITING...";
-            btn.className = "main-btn waiting";
-            updateWallet();
-        } else if (isFlying && gameBets[id].active && !gameBets[id].cashed) {
-            // Cash Out Logic
-            let win = (gameBets[id].amt * multiplier).toFixed(2);
-            balance += parseFloat(win);
-            gameBets[id].cashed = true;
-            btn.innerText = "WIN " + Math.floor(win);
-            btn.className = "main-btn waiting";
-            updateWallet();
+            btn.className = "action-btn btn-waiting";
+            updateUI();
+        } else if(flying && activeBets[id].on && !activeBets[id].cashed) {
+            let win = (activeBets[id].amt * mult).toFixed(2);
+            wallet += parseFloat(win);
+            activeBets[id].cashed = true;
+            btn.innerText = win;
+            btn.className = "action-btn btn-waiting";
+            updateUI();
         }
     }
 
-    function resetBets() {
-        for(let i=1; i<=2; i++) {
-            gameBets[i] = { active: false, amt: 0, cashed: false };
-            document.getElementById('btn'+i).innerText = "BET";
-            document.getElementById('btn'+i).className = "main-btn bet-btn";
-        }
-    }
-
-    function addToHistory(val) {
-        const h = document.getElementById('history');
+    function addHistory(v) {
+        const box = document.getElementById('history-box');
         const node = document.createElement('div');
-        let color = val < 2 ? 'blue' : (val < 10 ? 'purple' : 'gold');
-        node.className = `h-node ${color}`;
-        node.innerText = parseFloat(val).toFixed(2) + "x";
-        h.prepend(node);
+        let cls = v < 2 ? 'blue' : (v < 10 ? 'purple' : 'gold');
+        node.className = `h-node ${cls}`;
+        node.innerText = parseFloat(v).toFixed(2) + 'x';
+        box.prepend(node);
     }
 
-    function updateWallet() { document.getElementById('wallet').innerText = balance.toLocaleString() + " IQD"; }
+    function updateUI() {
+        document.getElementById('balance').innerText = wallet.toLocaleString() + " IQD";
+    }
 
-    // دەستپێکردنی یەکەم گەڕ
-    initRound();
+    resetRound();
 </script>
 
 </body>
